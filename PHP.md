@@ -210,6 +210,7 @@ echo '已跳出全部循环';
 #### 数组(array.php)
 * 数值数组
 * 关联数组
-* foreach循环
+* 多维数组
+    一般最复杂的就是三维数组，
 * foreach循环
 * foreach循环
