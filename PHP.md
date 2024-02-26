@@ -325,7 +325,7 @@ echo '已跳出全部循环';
             }
     ```
 
-#### 函数(数组.php)
+#### 函数(function.php)
     函数可以重复使用的代码块
     内置函数：print_r(),count(),time()(输出时间戳)
     自定义函数
@@ -424,6 +424,9 @@ echo '已跳出全部循环';
     ```
     unset()在函数内无法将全局变量给删除，但可删除函数内变量
     isset()判断变量是否存在，是否被定义声明且不为NULL
+    * 补充:isset() 主要用于检查一个变量是否已经被设置（即声明）且不为 null。
+        如果变量已经被设置且不为 null，isset() 返回 true；否则，返回 false。
+        如果变量未声明，使用 isset() 也会返回 false。
 * 超级全局变量
     不仅可在函数里使用，还可以在项目的任何一个文件内使用
     * $GLOBALS:包含了全部变量的全局组合数组，变量名字就是数组的键。
@@ -527,7 +530,9 @@ echo '已跳出全部循环';
         var_dump($text);
         ```
     * 空合并运算符??:
-        php7之后支持的。判断一个变量是否未定义或为NULL，若为未定义或为NULL则返回指定的默认值；否则返回该变量的值
+        * php7之后支持的。判断一个变量是否未定义或为NULL，若为未定义或为NULL则返回指定的默认值；否则返回该变量的值
+        * ?? 运算符用于检查左侧的表达式是否为 null。如果左侧表达式为 null，则返回右侧表达式的值；否则，返回左侧表达式的值。
+        * ?? 并不关心变量是否被声明，只关心它的值是否为 null。
         ```php
         $name = $username ?? "George";//如果$username定义了就输出定义值，未定义就输出George
         echo $name;
@@ -549,9 +554,18 @@ echo '已跳出全部循环';
         var_dump($a<=>$b);//-1
         ```
     * isset(),is_null(),empty()
-       isset(): 判断变量是否被定义，是否为NULL
-       is_null(): 需用于定义的变量，若不是的话就会出现警告，只能判断一个变量是否为NULL
-       empty(): 对于未定义的变量返回true，使用之前应确保变量已被定义
+       isset(): 判断变量是否被定义，是否为NULL;用于检查一个变量是否已经被设置（即声明）且不为 null。
+       is_null(): 需用于定义的变量，若不是的话就会出现警告，只能判断一个变量是否为NULL;用于检查一个变量是否为 null。
+       empty(): 对于未定义的变量返回true，使用之前应确保变量已被定义;用于检查一个变量是否为空;
+        * 变量被认为为空的情况包括：
+            * 不存在
+            * 其值为 false
+            * 其值为 0（作为整数）
+            * 其值为 '0'（作为字符串）
+            * 其值为空数组
+            * 其值为空字符串
+            * 其值为 null
+
        判断变量是否为0或false时必须用全等于
         ```php
         $name = NULL;
@@ -604,7 +618,177 @@ echo '已跳出全部循环';
     * array_sum();数组求和
     * array_product();数组求乘积
 * 时间，日期相关知识
+    * time()获取当前的时间戳（10位）
+        ```php
+        echo time();
+        echo PHP_EOL;
 
-* 
+        ```
+    * microtime(true)返回一个浮点数时间戳（秒数和微秒数的总和）
+        ```php
+        echo microtime(true);
+        echo PHP_EOL;
+        echo microtime(false);
+        echo PHP_EOL;
+        echo round(microtime(true)*1000);
+        echo PHP_EOL;
+
+        ```
+    * date(格式，时间戳) 日期格式化
+        ```php
+        $time = time();
+        echo date('Y-m-d H:i:s',$time);
+        echo PHP_EOL;
+
+        ```
+    * strtotime(string)
+        ```php
+        $time = strtotime('next monday');
+        echo date('Y-m-d H:i:s',$time);
+
+        ```
+    * 在指定时间的基础上改变日期
+        ```php
+        $baseTime = strtotime('2020-01-01');
+        $time = strtotime('next monday',$baseTime);
+        echo date('Y-m-d H:i:s',$time);
+
+        $baseTime = time();
+        $time = strtotime('+2 day',$baseTime);
+        echo date('Y-m-d H:i:s',$time);
+
+        ```
+    * mktime($hour, $minute, $second, $month, $day, $year);生成时间戳
+    * date_create(string);输出为对象
+    * date_format(object,时间格式);
+        ```php
+        echo mktime(2,30,56,4,8,2023);
+        $object = date_create('2020-01-01');
+        var_dump($object);
+        echo date_format($object,'Y年m月d日');
+
+        ```
+    * date_diff()计算两个日期之间的差，后项减前项
+        * %Y: 完整年份的差
+        * %y: 年份的差异（两位数）
+        * %m: 月份的差异
+        * %d: 天数的差异
+        * %a: 总共的天数差异
+        * %H: 小时的差异
+        * %h: 小时的差异（12小时）
+        * %I: 分钟的差异
+        * %S: 秒数的差异
+        * %R: 正负
+        * %r: 正负（必须为负时才会显示）
+        ```php
+        $date1 = date_create('2020-01-01  9:35:46');
+        $date2 = date_create('2020-01-03  17:05:26');
+        $diff = date_diff($date1,$date2);
+        echo $diff->format('%y 年 %m 月 %d 天 %H %I %S %R %r');
+
+        ```
+    * strftime(): 将时间戳化为可读的日期和时间字符串，支持本地化的日期和时间格式；php8已废弃
+        ```php
+        $timestamp = time();
+        $dateString = $strftime("%A %Y-%m-%d %H:%M:%S", $timestamp);//%A表示星期
+        echo $dateString;
+
+        ```
+    * gmdate()将GMT（格林威治标准时间）格式化为可读的日期和时间字符串；忽视服务器的时区设置
+    * date()：使用本地时间为基准，根据当前服务器的时区设置来格式化日期和时间。
+    * date_default_timezone_set($timezone);设置默认时区；只能在脚本开始时设置，不能在运行时动态设置
+    * 时区设置如：'UTC'（格林威治时间），'localhost'本地时区，'Asia/Shanghai'指定时区
+    * timezone_identifiers_list()返回所有可用时区标识符的数组，查询某地时区时常用
+        ```php
+        echo gmdate('Y-m-d H:i:s');
+        echo date('Y-m-d H:i:s');
+        date_default_timezone_set('Asia/Shanghai');
+        print_r(timezone_identifiers_list());
+
+        ```
+* DateTime对象 
+    * 加减时间:modify(),new DateInterval()
+    * (1)
+        ```php
+        $dateTime = new DateTime("2023-11-01 23:09:22");
+        $dateTime->modify('-1 hour');
+        echo $dateTime->format('Y-m-d H:i:s');
+        echo PHP_EOL;
+
+        ```
+    * (2)
+        ```php
+        $dateTime = new DateTime("2023-11-01 23:09:22");
+        $interval = new DateInterval('P1D');
+
+        ```
+    *  $dateTime->sub($interval);
+        ```php
+        $dateTime->add($interval);
+        echo $dateTime->format('Y-m-d');
+        echo PHP_EOL;
+
+        ```
+    * 设置日期和时间setTime(),setDate()
+        ```php
+        $dateTime = new DateTime("2023-11-01 23:09:22");
+        $dateTime->setDate(2024, 1, 1);
+        $dateTime->setTime(14, 1, 1);
+        echo $dateTime->format('Y-m-d H:i:s');
+
+        ```
+    * 设置并获取时区
+    * setTimeZone(new DateTimeZone('Asia/Shanghai'));
+    * getTimeZone()
+        ```php
+        $dateTime = new DateTime('2020-01-01 00:00:00');
+        $dateTime->setTimeZone(new DateTimeZone('Asia/Shanghai'));
+        $dateTimeZone = $dateTime->getTimeZone();
+        print_r($dateTimeZone->getName());
+        print_r($dateTimeZone->getLocation());
+
+        ```
+    * 将日期时间格式化为指定的字符串格式:format()
+    * 获取时间对象的时间戳：getTimestamp()
+        ```php
+        $dateTime = new DateTime('2020-02-02 02:02:02');
+        $timestamp = $dateTime->getTimestamp();
+        print_r($timestamp);
+        echo $dateTime->format('Y年m月d日');
+
+        ```
+    * 计算时间差:diff()
+        ```php
+        $dateTime1 = new DateTime('2020-01-01 00:00:00');
+        $dateTime2 = new DateTime('2020-02-02 02:02:02');
+        $diff = $dateTime1->diff($dateTime2);//后项减去前项
+        echo $diff->format('%R %m %d %h %i %s');
+
+        ```
+
+#### 特殊的变量写法和常量
+* $a $$a $$$a
+    ```php
+    $a = 'aerospace';
+    $$a = '你好';
+    $$$a = 'test';
+    echo $a;
+    echo PHP_EOL;
+    echo $$a;
+    echo PHP_EOL;
+    echo $aerospace;
+    echo PHP_EOL;
+    echo $你好;
+    ```
+* 魔术常量
+    值随着代码中的位置的改变而改变
+    * __LINE__:当前行号
+    * __FILE__:文件的完整路径和文件名，包括盘符的根目录
+    * __DIR__:文件所在目录
+    * __FUNCTION__:当前函数名字
+    * __CLASS__:被定义时类的名字
+    * __NAMESPACE__:输出命名空间
+    * __METHOD__:输出命名空间，函数名，类名
+    * __TRAIT__:(类的内容时说明)
 
 
