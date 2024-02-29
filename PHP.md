@@ -791,4 +791,564 @@ echo '已跳出全部循环';
     * __METHOD__:输出命名空间，函数名，类名
     * __TRAIT__:(类的内容时说明)
 
+#### 文件包含
+* include和require
+    * 区别：处理错误的方式不同
+    require：错误发生后脚本停止执行；必须文件常用。
+    include：错误发生后脚本继续执行；找不到文件会生成warning，可选文件常用。
+    * 案例header.php  homepage.php
+* include_once和require_once
+    仅调用一次.
+    快速插入路径方法：先拖住文件到某个位置，按住shift并松手则绝对路径自动插入
+    实践案例p36
+
+### 面向对象
+* 对象  
+    程序设计中，对象是由[信息]及对[信息进行处理的描述]所组成的整体。
+
+* 面向对象(OOP)
+    * 概念
+        将程序中的[数据]和[操作数据的方法]封装在一起，形成对象；
+        [对象之间]的[交互]和[消息传递]来完成程序功能；
+        OOP强调[数据]的[封装]，[继承]，[多态]和[动态绑定]等特性，使程序有更好的[可扩展性]，[可维护性]，[可重用性]。
+
+    * 对象的主要三个特性
+        对象的[行为]：对象可执行的操作。如：开/关灯操作。
+        对象的[形态]：如何响应对象的不同行为。如：颜色，尺寸等属性。
+        对象的[表示]：用什么去表示对象（面向对象编程中，通常使用类来表示）。
+    * 面向对象的主要三个特性
+        * 封装
+            将对象[属性]和[方法]封装在一起，使[外部无法直接访问和修改对象内部状态]；
+            使用[访问修饰符]限制[属性和方法]的访问权限，实现封装；
+            [访问修饰符]：public，private，protected。
+        * 继承
+            [创建]一个[新类]，该类[继承]了[父类的属性和方法]，且可添加[自己的属性和方法]；
+            继承可以[避免重复编写相似代码]，[实现代码重复利用]；
+            只能继承一个，不能对父类造成影响，但可以改动继承的属性和方法。
+        * 多态
+            使用[一个父类的变量]来[引用不同子类的对象]，实现对不同对象的统一操作；
+            通过[接口interface]和[抽象类abstract_class]来实现。
+
+* 类 (class.php)
+    * 概念
+        定义事物的抽象特点；
+        包含[数据形式:如名字，性别等属性]及[对数据的操作];
+    * 使用方法
+        * （1）定义
+            class 类名 {
+
+            }
+        * （2）调用
+            new 实例化对象
+    * 类的方法和属性
+        * 类的方法（即函数）
+            public function 函数名(){
+
+            }
+        注意：public可以省略，默认自带
+        * $this：表自身的对象
+            ```php
+                //不采用$this
+                class Fruits {
+                    public $name;
+                    public $color = 'pink';
+                    function flower($name) {
+                        echo $name.'开花了';
+                    }
+                }
+                $apple = new Fruits;
+                $apple->name = 'apple';
+                echo $apple->name;
+            ```
+            ```php
+                //采用$this
+                class Fruits {
+                    public $name;
+                    public $color = 'pink';
+                    function flower() {
+                        echo $this->name.'开花了';
+                    }
+                }
+                $cheery = new Fruits;
+                $cheery->name = 'cheery';
+                echo $cheery->flower().'</br>flower is '.$cheery->color;
+            ```
+    * 访问控制
+        * public：可在任何地方被访问；
+        * private：自身，子类及其父类能访问；
+        * protected：只有自己能访问；
+        注意：private和protected也能通过某些方法让外部能访问
+        * 案例（private）
+            ```php
+                class Fruits {
+                    private $name = 'cheery';
+                    public $color = 'pink';
+                    function flower() {
+                        echo $this->name.'开花了';
+                    }
+                    function getName(){
+                        return $this->name;
+                    }
+                    function setName($name){
+                        $this->name = $name;
+                    }
+                }
+                $cheery = new Fruits;
+                echo $cheery->getName().'</br>';
+                echo $cheery->flower().'</br>';
+                $cheery->setName('peach');
+                echo $cheery->flower();
+            ```
+    * 构造函数__construct
+        创建新对象时被自动调用；
+        初始化对象属性，执行一些必要操作；
+        没有返回值。
+        * 初始化对象属性
+            ```php
+                //构造函数__construct，初始化对象属性
+                class Fruits {
+                    private $name;
+                    public function __construct()
+                    {
+                        $this->name = 'George';
+                    }
+                    public function eat(){
+                        echo $this->name.'在吃水果';
+                    }
+                }
+                $George = new Fruits;//创建的同时也执行构造函数
+                echo $George->eat();
+            ```
+            ```php
+                //构造函数__construct，传参
+                class Fruits {
+                    private $name;
+                    public function __construct($name)
+                    {
+                        $this->name = $name;// 构造函数将参数给内部变量
+                    }
+                    public function eat(){
+                        echo $this->name.'在吃水果';
+                    }
+                }
+                $Jane = new Fruits('Jane');//创建的时候必须传参
+                echo $Jane->eat();
+            ```
+        * 执行一些必要操作
+            ```php
+                //构造函数__construct，传参
+                class Fruits {
+                    public $name;
+                    private $birth;
+                    private $age;
+                    public function __construct($name,$birth)
+                    {
+                        $this->name = $name;
+                        $this->birth = $birth;
+                        //对初始对象执行一些必要操作
+                        $this->age = floor((time() - strtotime($birth))/3600/24);
+
+                    }
+                    public function eat(){
+                        echo $this->name.'在吃水果';
+                    }
+                    public function getInfo(){
+                        echo "$this->name is burned in $this->birth. now age is $this->age day";
+                    }
+                }
+                $cheery = new Fruits('cheery', '2020-02-02');//创建的时候必须传参
+                echo $cheery->getInfo();
+            ```
+    * 析构函数__destruct(使用频率很低)p42
+        对象被销毁时自动调用；
+        执行一些清理操作，如释放资源，关闭数据库连接；
+        对象不再被引用或脚本执行结束时，析构函数会被自动调用。
+        注意：php会自动关闭用不到的连接或资源，因此一般不特意使用析构函数
+    * 静态变量static和self
+        静态变量static：无需对类进行实例化，就可直接调用属性和方法
+        ```php
+            class Fruits {
+                public $name;
+                public static $color = 'red';
+                public function eat(){
+                    // echo $this->color;//会有警告
+                    // echo Fruits::$color;//效果同下，但一般不使用
+                    echo self::$color;//常用
+
+                }
+                
+            }
+            $cheery = new Fruits;
+            Fruits::$color = 'pink';//所有对静态变量进行的操作都会对所有对象起作用
+            echo $cheery->eat();
+        ```
+        注：所有对静态变量进行的操作都会对所有对象起作用
+    * 类常量
+        和静态属性类似，唯一区别：类常量不可更改，静态属性可以；
+        const关键字定义,self::常量名去取;
+        使用场景：所有对象共用一个属性。
+        ```php
+        class Fruits {
+            public $name;
+            public static $color = 'red';
+            const TASTE = 'sweet';//类常量定义
+            public function eat(){
+                echo self::TASTE;//类常量获取
+
+            }   
+        }
+        $cheery = new Fruits;
+        echo $cheery->eat();
+        echo Fruits::TASTE;//类常量外部获取
+        ```
+    * static静态方法
+        * 调用静态方法，静态变量
+            ```php
+                class Fruits {
+                    public static $name = 'cheery';
+                    public static $color = 'red';
+                    const TASTE = 'sweet';
+                    public static function eat(){
+                        echo self::$name;
+                        echo self::TASTE;
+
+                    }
+                    public static function say() {
+                        echo self::eat();
+                    }
+                    
+                }
+                $cheery = new Fruits;
+                echo $cheery->say();
+            ```
+        * 调用非静态方法，非静态变量
+            ```php
+                class Fruits {
+                    public $name = 'cheery';//非静态变量
+                    public static $color = 'red';
+                    const TASTE = 'sweet';
+                    public function eat(){//非静态方法
+                        echo "my name is $this->name";
+
+                    }
+                    public static function say() {
+                        echo (new self)->eat();
+                    }
+                    
+                }
+                $cheery = new Fruits;
+                echo $cheery->say();
+            ```
+    * 类的继承
+        * 特点
+            * (1)extends关键字；
+            * (2)能够继承父类属性；
+            * (3)不能够在外部直接访问继承的父类的protected,private属性；
+            * (4)被保护属性，需在内部取。
+            ```php
+                class Fruits {
+                    public $sort = 'crispy';
+                    protected $price = 20;
+                    private $taste = 'delicious';   
+                }
+
+                class Apple extends Fruits {
+                    public function getInfo()
+                    {
+                        echo $this->price;
+                        //echo $this->taste;//private取不到
+                    }
+                }
+                //能够继承父类属性
+                // var_dump(new Fruits);//var_dump只能打印对象的属性，不能打印对象方法
+                // var_dump(new Apple);
+
+                //不能够外部直接访问继承父类的protected,private属性
+                // $apple = new Apple;
+                // echo $apple->price;//提示被保护，需在内部取
+                // echo $apple->taste;//提示未定义
+
+                //被保护属性，需在内部取
+                $apple = new Apple;
+                echo $apple->getInfo();
+            ```
+            * (5)继承父类的构造函数，方法；
+            * (6)能使用自己的方法；
+            * (7)父类不能使用子类的方法；
+            ```php
+                class Fruits {
+                    protected $price;
+                    
+                    public function __construct($price)
+                    {
+                        $this->price = $price;
+                    }
+
+                    public function eat()
+                    {
+                        echo "$this->price is expensive";
+                    }
+                }
+
+                class Apple extends Fruits {
+                    public function getInfo()
+                    {
+                        echo "really expensive, but buy one get one free.Get it!";
+                    }
+                }
+
+                $apple = new Apple(20);//继承父类的构造函数
+                echo $apple->eat().'</br>';//继承父类的方法
+                echo $apple->getInfo();//使用自己的方法
+
+                $fruit = new Fruits(19);
+                echo $fruit->getInfo();//父类不能使用子类的方法
+            ```
+    * 方法和属性重写
+        ```php
+            class Fruits {
+                protected $price = 30;
+                
+                public function eat()
+                {
+                    echo "$this->price is expensive";
+                }
+            }
+
+            class Apple extends Fruits {
+                public function getInfo()
+                {
+                    echo "really expensive, but buy one get one free.Get it!";
+                }
+            }
+
+            $apple = new Apple;
+            echo $apple->eat();
+        ```
+    * final关键字
+        * 作用：防止类被继承；防止类的方法被重写。
+        注：不能用于属性，可放在public前后
+        ```php
+            final class Fruits {
+                protected $price = 30;
+                
+                final public function eat()
+                {
+                    echo "$this->price is expensive";
+                }
+            }
+
+            class Apple extends Fruits {
+                //父类的方法和属性被重写
+                protected $price = 10;
+
+                public function eat()
+                {
+                    echo "$this->price is not expensive";
+                }
+
+                public function getInfo()
+                {
+                    echo "really expensive, but buy one get one free.Get it!";
+                }
+            }
+
+            $apple = new Apple;
+            echo $apple->eat();
+        ```
+    * 调用父类方法
+        parent::
+        ```php
+            class Fruits {
+                protected $price;
+                
+                public function __construct($price)
+                {
+                    $this->price = $price;
+                }
+                public function eat()
+                {
+                    echo "$this->price is expensive";
+                }
+            }
+
+            class Apple extends Fruits {
+                public function __construct($price, $taste)
+                {
+                    parent::__construct($price);//调用父类的构造函数
+                    echo "This is a construct of Apple : $taste";
+                }
+                public function getInfo()
+                {
+                    parent::eat();//调用父类方法
+                    echo "Really expensive, but buy one get one free.Get it!";
+                }
+            }
+            $apple = new Apple(50, 'delicious');
+            echo $apple->getInfo();
+        ```
+    * 静态延迟绑定：static
+        * 作用：调用实际运行的类的方法和属性
+        * 语法：static::$变量名
+        ```php
+            class Status {
+                protected static $name = 'George';
+                
+                public static function action()
+                {
+                    echo self::$name ." is playing";
+                    echo "-------";
+                    echo static::$name ." is playing";
+                }
+            }
+
+            class Child extends Status {
+                protected static $name = 'Ann';
+            }
+            Child::action();//George is playing-------Ann is playing
+            Status::action();//George is playing-------George is playing
+        ```
+    * 类的多态
+        * 多态：[不同类的对象]对[相同消息]作出[不同响应]。通过[方法重写]和[方法重载]来实现。
+        * 方法重载：
+            子类重写父类的方法，改变方法的实现细节；
+            同一个类中根据参数个数或类型不同来实现不同的功能；
+            多态性只适用于继承关系的类，子类必须重写父类的方法才能实现多态。
+            func_get_args();获得参数(返回包含函数参数列表的数组)
+            func_num_args(); 获得参数的数量
+            ```php
+                class Status {
+                    public function action()
+                    {
+                        echo "Pet is roaring";
+                    }
+                }
+
+                class Pets extends Status {
+                public function action()
+                {
+                    $numArgs = func_num_args();
+                    var_dump($numArgs);
+                    switch($numArgs){
+                        case 2:
+                            echo 'action 2';
+                            break;
+                        case 3:
+                            echo 'action 3';
+                            break;
+                        default:
+                            echo 'action default';
+                    }
+                }
+                }
+
+                $pets = new Pets();
+                $pets->action('dog','cat',2);
+            ```
+
+    * 接口和抽象类
+        * 接口（interface）：
+            * 特点：
+                一组方法的集合，不是类，不能实例化；
+                只可使用public;
+                指定某个类必须实现某些方法，定义规范;
+                同一个类可以执行(implements)多个接口，接口间[逗号隔开]。
+            * 规范：
+                interface 名字 {
+                    public function a();
+                    public function b();
+                }
+            * 案例
+                ```php
+                    interface Action{
+                        const PEOPLE = 'health';
+                        public function eat();
+                        public function sleep($hours);
+                        public static function drink();
+                    }
+
+                    class Human implements Action {
+                        public function eat()
+                        {
+                            echo 'human must eat.';
+                        }
+
+                        public function sleep($hours)
+                        {
+                            echo "human must sleep.$hours";
+                        }
+
+                        public static function drink()
+                        {
+                            echo 'human must drink.';
+                        }
+                    }
+                    $human = new Human();
+                    echo $human->eat();
+                    echo $human->sleep(8);
+                    echo Human::PEOPLE;
+                    echo Human::drink();
+                ```
+
+        * 抽象类和抽象方法
+            * 抽象类（是类）
+                * 特点：
+                    只能被继承，不能被实例化；
+                    用于定义相关方法，方法的实现由子类来完成；
+                    子类继承抽象类，必须实现抽象类中的所有抽象方法；
+                    抽象类可以包含抽象方法和普通方法
+                * 规范：
+                    abstract class 名字 {
+
+                    }
+            * 抽象方法
+                * 特点：
+                    只有方法声明，不需具体实现；
+                    只存在于抽象类中；
+                    可以使用protected,不可用private。
+                * 规范：
+                    abstract public function a();
+                    abstract public function b();
+            * 案例
+                ```php
+                    abstract class Action{
+                        abstract public function eat();
+                        abstract protected function sleep($hours);
+                        public function drink(){
+                            echo "hahaha";
+                        }
+                    }
+
+                    class Human extends Action {
+                        public function eat()
+                        {
+                            echo 'human must eat.';
+                        }
+
+                        public function sleep($hours)
+                        {
+                            echo "human must sleep.$hours";
+                        }
+
+                        public function drink()
+                        {
+                            echo 'human must drink.';
+                        }
+                    }
+                    $human = new Human();
+                    echo $human->eat();
+                    echo $human->sleep(8);
+                    echo $human->drink();
+                ```
+        * 接口和抽象类的区别p51     
+    * 
+    * 
+    * 
+    * 
+    * 
+
+
+
+
+
 
