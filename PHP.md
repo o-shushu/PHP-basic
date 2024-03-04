@@ -1314,8 +1314,12 @@ echo '已跳出全部循环';
                     abstract class Action{
                         abstract public function eat();
                         abstract protected function sleep($hours);
+                        public $name;
+                        public function __construct(String $name = 'Ann'){
+                            $this->name = $name;
+                        }
                         public function drink(){
-                            echo "hahaha";
+                            echo $this->name."hahaha";
                         }
                     }
 
@@ -1330,18 +1334,150 @@ echo '已跳出全部循环';
                             echo "human must sleep.$hours";
                         }
 
-                        public function drink()
-                        {
-                            echo 'human must drink.';
-                        }
+                    
                     }
                     $human = new Human();
-                    echo $human->eat();
-                    echo $human->sleep(8);
                     echo $human->drink();
                 ```
-        * 接口和抽象类的区别p51     
-    * 
+        * 接口和抽象类的区别p51 
+            * 抽象类可以包含非抽象方法的实现，接口只能包含方法声明；
+            * 子类只能继承一个抽象类，但可以实现多个接口；
+            * 抽象类里可以有构造函数，但接口里不能有；
+            * 抽象类中的[方法]可以有public，protected,private访问修饰符，而接口中的方法只能是public；
+            * 子类继承抽象类时，必须实现抽象类中的[所有]的[抽象方法](注意区分普通方法)，否则子类也必须声明为抽象类；
+                ```php
+                abstract class Action{
+                    abstract public function eat();
+                    abstract protected function sleep($hours);
+                    public $name;
+                    public function __construct(String $name = 'Ann'){
+                        $this->name = $name;
+                    }
+                    public function drink(){
+                        echo $this->name."hahaha";
+                    }
+                }
+
+                abstract class Human extends Action {
+                    
+                    public function eat()
+                    {
+                        echo 'human must eat.';
+                    }
+                
+                }
+                class Ann extends Human {
+                    
+
+                    public function sleep($hours)
+                    {
+                        echo "human must sleep.$hours";
+                    }
+                }
+                $human = new Ann();
+                echo $human->eat();
+                ```
+            * 子类实现接口时，必须实现接口中的所有方法
+    * trait复用
+        解决单一继承问题；
+        同时使用多个trait，用逗号隔开；
+        把常用的，通用代码抽离出来，不管逻辑关系；
+        不能有类常量，不能实例化 ;
+        可以使用抽象方法；
+        可以使用静态属性和静态方法；
+        可以使用其他trait；
+
+            ```php
+            trait A {
+                public function TextA(){
+                    echo "A里面有".__METHOD__;
+                } 
+            }
+            trait B {
+                use A;
+                public function dance(){
+                    echo "B里面有".__METHOD__;
+                } 
+            }
+
+            class Human {
+                use B;
+                function sleep($hours){
+                    echo '测试'.$hours;
+                }
+                public function eat()
+                {
+                    echo 'human must eat.';
+                }
+            
+            }
+
+            $human = new Human('Jane');
+            echo $human->TextA();//A里面有A::TextA
+            ```
+        可以使用parent
+        注：方法名和类名不要有冲突
+        ```php
+        class Action{
+            public function drink(){
+                echo "Everybody are hahaha";
+            }
+        }
+        trait Human {
+            public function do(){
+                parent::drink();
+                echo $this->name."is playing";
+                echo __TRAIT__;
+            }
+        }
+        class Somebody extends Action{
+            use Human;
+            protected $name;
+            public function __construct($name)
+            {
+                $this->name = $name;
+            }
+        }
+
+        $human = new Somebody('Jane');
+        echo $human->do();
+        ```   
+        注：trait的方法同名和属性同名冲突
+        * 解决方法同名冲突
+            * insteadOf
+            * as
+            ```php
+            trait A
+            {
+                public function eat(){
+                    echo "This is A.";
+                }
+            }
+            trait B
+            {
+                public function eat(){
+                    echo "This is B.";
+                }
+            }
+            class Somebody{
+                use A,B{
+                    B::eat insteadOf A;//B的eat替换掉A的
+                    A::eat as Aeat;//A重命名为Aeat,as还能更改方法访问权限，如下：
+                    // A::eat as protected Aeat;
+                }
+                // public function test()
+                // {
+                //     echo $this->Aeat();
+                // }
+            }
+            $human = new Somebody;
+            echo $human->eat();//This is B.
+            echo $human->Aeat();//This is A.
+            ```     
+
+### 表单和请求
+* 表单制作（见Form文件夹）
+* get和post及两者区别   
     * 
     * 
     * 

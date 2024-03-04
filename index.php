@@ -1,33 +1,30 @@
 <?php
-abstract class Action{
-    abstract public function eat();
-    abstract protected function sleep($hours);
-    public function drink(){
-        echo "hahaha";
+trait A
+{
+    public function eat(){
+        echo "This is A.";
     }
 }
-
-class Human extends Action {
-    public function eat()
-    {
-        echo 'human must eat.';
-    }
-
-    public function sleep($hours)
-    {
-        echo "human must sleep.$hours";
-    }
-
-    public function drink()
-    {
-        echo 'human must drink.';
+trait B
+{
+    public function eat(){
+        echo "This is B.";
     }
 }
-$human = new Human();
-echo $human->eat();
-echo $human->sleep(8);
-echo $human->drink();
-
+class Somebody{
+    use A,B{
+        B::eat insteadOf A;//B的eat替换掉A的
+        A::eat as Aeat;//A重命名为Aeat,as还能更改方法访问权限，如下：
+        // A::eat as protected Aeat;
+    }
+    // public function test()
+    // {
+    //     echo $this->Aeat();
+    // }
+}
+$human = new Somebody;
+echo $human->eat();//This is B.
+echo $human->Aeat();//This is A.
 
 
 
