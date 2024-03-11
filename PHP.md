@@ -1478,12 +1478,96 @@ echo '已跳出全部循环';
 ### 表单和请求
 * 表单制作（见Form文件夹）
 * get和post及两者区别   
+    * get:数据附加在URL上
     * 
-    * 
-    * 
-    * 
+    * 区别 
+        * get对任何人可见,信息量有限制，不能超过2000个字符；可以将带参数的网址发送别人；可以收藏get请求页面。
+        * post参数对任何人不可见，发送信息量没有限制，默认发送量最大值为8M，但可以设置php.ini的post_max_size进行更改；发送的变量数最大值max_input_vars
+* $_REQUEST(包含$_GET,$_POST,$_COOKIE)
+    $_SERVER获取请求方式
+* htmlspecialchars()：将字符串中的特殊字符转换为HTML实体，避免在HTML文档中引起解析错误或安全漏洞
+    &  --->&amp
+    "" --->&quot
+    '' --->&#039
+    <  --->&lt
+    >  --->&gt
 
+### mysql数据库
+密码：wangzzWZZ
+连接数据库：mysql -u root -p
+show databases
+使用数据库：use ****
+查看数据表列表：show tables
+数据库工具：SQL_Front,Navicat,DBeaver
+操作数据库的方式：MySQLi PDO
+#### MySQLi(只操作mysql)
+* 启用扩展mysqli，在php.ini中添加extension=php_mysqli
+* 面向过程
+    ```php
+    $servername = "localhost";
+    $username = "root1";
+    $password ="wangzzWZZ";
 
+    try {
+        //$cont返回object对象
+        $cont = mysqli_connect($servername, $username, $password);
+    } catch (\Exception $e) {
+        die("アクセスできない".$e->getMessage());
+    }
+
+    // if(!$cont){
+    //     die("アクセスできない" . mysqli_connect_error());
+    // }
+    echo "OK";
+    mysqli_close($cont);
+    ```
+* 面向对象
+    ```php
+    $servername = "localhost";
+    $username = "root";
+    $password ="wangzzWZZa";
+
+    try {
+    $cont = new mysqli($servername, $username, $password);
+    } catch (\Exception $e) {
+        die("アクセスできない".$e->getMessage());
+    }
+
+    // if($cont->connect_error){
+    //     die("アクセスできない" . $cont->connect_error);
+    // }
+    echo "success";
+    $cont->close();
+    ```
+* resource资源类型
+    ```php
+    $servername = "localhost";
+    $username = "root";
+    $password ="wangzzWZZ";
+
+    $cont = mysqli_connect($servername, $username, $password);
+    // mysql_connect  在php5.*时还能用，后面废弃了
+    // var_dump($cont);
+    // var_dump(is_resource($cont));//false
+    // var_dump(gettype($cont) === 'resource');//false
+    // var_dump(get_resource_type($cont));//获取资源是什么类型
+
+    $do = fopen("text.txt", "r");
+    var_dump($do);//resource(4) of type (stream) b
+    var_dump(is_resource($do));//bool(true)是否为资源类型
+    var_dump(gettype($do) === 'resource');//bool(true)
+    var_dump(get_resource_type($do));//string(6) "stream"获取资源的类型名称
+    $cont = fread($do, filesize("text.txt"));//this is a text.
+    echo $cont;
+    fclose($do);
+    ```
+* 创建数据库
+NOT NULL：必须含值，不能为空，null值也不允许
+UNSIGNED：无符号数值类型，0及正数
+AUTO INCREMENT
+PRIMARY KEY 主键
+
+#### PDO(操作多种数据库)
 
 
 
