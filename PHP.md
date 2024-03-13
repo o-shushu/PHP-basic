@@ -1561,13 +1561,76 @@ show databases
     echo $cont;
     fclose($do);
     ```
-* 创建数据库
+* 创建数据库(createmysql1.php)
 NOT NULL：必须含值，不能为空，null值也不允许
 UNSIGNED：无符号数值类型，0及正数
 AUTO INCREMENT
 PRIMARY KEY 主键
+* 常见条件判断(createmysql2.php)
+    * where 条件筛选
+    * like %xxx%  %xxx  xxx%(以xxx开头)
+    * between and 
+    * is null/is not null
+    * in(a,b,c)
+    * and/or
+    * order by 列名 asc(升序，默认).可以两列排序，用逗号隔开，只有第一列值相同时才使用第二列
+    * limit 限制数
+    * offset 偏移量（可以指定从哪一条开始）
+* 更新数据
+    UPDATE SET column1=value, column2=value2, ...WHERE
+* 修改数据表
+    修改表名：
+    ALTER TABLE 旧表名 RENAME 新表名；
 
+    重置自增起始值为1：
+    ALTER TABLE 表名 AUTO_INCREMENT = 1;
+
+    添加新列：
+    ALTER TABLE 表名 ADD COLUMN 列名 数据类型；
+
+    修改列名和数据类型：
+    ALTER TABLE 表名 CHANGE COLUMN 旧列名 新列名 新数据类型；
+
+    修改默认值：
+    ALTER TABLE 表名 ALTER COLUMN 列名 SET DEFAULT 默认值；
+
+    删除列：
+    ALTER TABLE 表名 DROP COLUMN 列名；
+
+    修改列的注释：
+    ALTER TABLE 表名 MODIFY COLUMN 列名 数据类型 COMMENT '新注释';
+
+    删除数据表：
+    DROP TABLE IF EXISTS 表名;
+
+    删除数据库：
+    DROP database;
 #### PDO(操作多种数据库)
+
+#### 预处理语句(Form/user.php)
+预处理语句：执行带有参数的SQL语句。
+提高安全性，防止SQL注入；
+能重复使用相同的sql模板而只需更改参数，提高执行效率。
+
+在输入框出输入"or  1=1 or"，可能会导致用户数据泄露.
+(1)
+```php
+$sql ='SELECT * FROM users WHERE username = "'.$username.'" AND password = "'.$password.'"';
+或者
+$sql ="SELECT * FROM users WHERE username = ? AND password = ?";
+或者
+$sql = "INSERT INTO users (username, password)
+        VALUES (?, ?)";
+
+$stmt = $cont->prepare($sql);
+$stmt->bind_param("ss",$username,$password);
+$stmt->execute();
+var_dump($stmt->affected_rows);
+$stmt->close();
+```
+(2)传统方法：prepare(),bind_param(),execute(),get_result()
+(3)php8.2及以上版本使用:execute_query($sql,[$param,$param,...])
+
 
 
 
