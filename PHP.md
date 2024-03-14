@@ -1605,7 +1605,7 @@ PRIMARY KEY 主键
 
     删除数据库：
     DROP database;
-#### PDO(操作多种数据库)
+
 
 #### 预处理语句(Form/user.php)
 预处理语句：执行带有参数的SQL语句。
@@ -1630,6 +1630,18 @@ $stmt->close();
 ```
 (2)传统方法：prepare(),bind_param(),execute(),get_result()
 (3)php8.2及以上版本使用:execute_query($sql,[$param,$param,...])
+
+#### PDO(操作多种数据库)
+需要安装php_pdo_mysql扩展，可用phpinfo()检测
+* PDO执行sql语句方法 
+    * exec()方法
+        适用于执行不返回结果集的SQL语句，如：INSERT,UPDATE和DELETE等操作；
+        返回受影响的行数，若没有受影响的行数，返回0；
+        通常用于不需要获取结果的简单操作。
+    * query()方法
+        返回结果集的SQL语句，如：SELECT；
+        返回一个PDOStatement对象，使用该对象的方法（如：fetch(),fetchAll()来获取查询结果；
+        通常用于需要获取结果的查询操作。
 
 
 
