@@ -1633,7 +1633,7 @@ $stmt->close();
 
 #### PDO(操作多种数据库)
 需要安装php_pdo_mysql扩展，可用phpinfo()检测
-* PDO执行sql语句方法 
+* PDO执行sql语句方法 （PDO.php）
     * exec()方法
         适用于执行不返回结果集的SQL语句，如：INSERT,UPDATE和DELETE等操作；
         返回受影响的行数，若没有受影响的行数，返回0；
@@ -1642,6 +1642,43 @@ $stmt->close();
         返回结果集的SQL语句，如：SELECT；
         返回一个PDOStatement对象，使用该对象的方法（如：fetch(),fetchAll()来获取查询结果；
         通常用于需要获取结果的查询操作。
+
+#### cookie 和 session
+* cookie
+    * 作用
+        常用于识别用户；
+        是一种服务器留在用户计算机上的小文件；
+        每当同一台计算机通过浏览器请求页面时，这台计算机将会发送cookie；
+        通过PHP，能够创建并取回cookie的值。
+    * 创建
+        setcookie(name, value, expire, path, domain);
+    * 参数说明
+        name:cookie的名称。
+        value:cookie的值。
+        expire:cookie的过期时间，可以是一个unix时间戳。
+                如：time() + 3600表示一小时后过期；
+                    "2024-01-01 00:00:00"。
+        path:可选参数，指定cookie的有效路径，默认为当前路径。
+        domain:可选参数，指定cookie的有效域名，默认为空，表当前域名。
+        secure:可选参数，是否仅通过安全的HTTPS连接传输。
+        httponly:可选参数，是否仅通过HTTP协议访问Cookie。默认为false.
+
+* session
+    * 作用
+        用于在服务器上存储关于用户会话的信息，并且对于程序中的所有页面都可用的；
+        会话信息是临时的，在用户离开网站后将被删除；
+        允许在同一个用户的多个请求之间保持数据的状态，便于传递数据。
+        工作机制：为访客创建一个唯一的id（UID），并基于id来存储变量。UID存储在cookie中，或者通过URL进行传导。
+    * 启动
+        session_start();
+    * 操作
+    ```php
+    $_SESSION['username']='Ann';
+    $_SESSION['userid']='1';
+
+    echo $_SESSION['username'];
+    ```
+    
 
 
 
