@@ -5,9 +5,12 @@
 * 使用理由
 * 编辑器推荐
 #### 特点
-    超文本预处理
+    超文本预处理（PHP Hypertext Preprocessor）
     动态交互，服务端用脚本语言
     解释型语言，无需编译，直接运行
+#### 运用实例
+    全球最大的博客系统wordpress
+    脸书
 #### 组成
     php文件包含html,css,JS
     服务器上执行，结果以纯文本格式返回给浏览器
@@ -19,14 +22,19 @@
     用户访问网站的权限管理
     接收表单数据
     对数据加密，压缩
+    小程序app浏览器插件等的后端服务接口
 #### 使用理由
+    不受限于只输出html,还可以输出图像，pdf文件，flash影片，还可输出XHTML,XML
     跨平台（windows,linux,unix,macOs等）
-    兼容几乎所有的服务器
+    兼容几乎所有的服务器（apache,nginx,IIS等）
     支持多种数据库
 #### 工具推荐
-    编辑器：vscode,notepad,phpStorm
+    编辑器：vscode,notepad,phpStorm（不推荐初学者使用）
     集成环境：phpStudy(小皮面板)
     live server插件安装：实时刷新网页工具
+    知识手册查询网站：
+    https://www.runoob.com/（菜鸟）
+    https://www.w3school.com.cn/
 
 ### 基础PHP语法
 * 基本格式
@@ -65,7 +73,10 @@ php脚本可以放置在文档中的任意位置
 不能写在HTML,js,css文件里运行
 语句以分号结尾
 ```php
-    <?php 脚本 ?>
+    <?php 
+        脚本; 
+        脚本
+    ?>
 ```
 #### 输出方法
 * echo:一个以上字符串，用逗号隔开
@@ -73,24 +84,39 @@ php脚本可以放置在文档中的任意位置
 * echo和print区别
     * echo比print快一点
     * 两者有无括号都可使用
+```php
+    echo "hello","world";//正确
+    print "hello","world";//错误
+    print 'world';//正确
+    echo print 'world';//world1
+```
 #### 注释
 * 作用:供别人阅读；提醒自己
     * 单行注释//,#
     * 多行注释/*  */
-#### 变量
+#### 变量(存储信息的容器)
 * 变量命名规则：
     * $开头，名称只能包含字母，数字，下划线
     * 必须以字母或下划线开头
     * 不能以数字开头，不能有空格
     * 对大小写敏感
 
-* 命名方法：大小驼峰法，下划线法
-注：只有变量名对大小写敏感。如：echo 和 ECHO都能用
-
-空白符
+* 命名方法：小驼峰法，大驼峰法，下划线法
+注：所有用户定义的函数，类和关键词都对大小写不敏感（如：if,else,echo）
+只有变量名对大小写敏感。如：echo 和 ECHO都能用
+```php
+    //小驼峰法
+    $firstName
+    //大驼峰法
+    $FirstName
+    //下划线法
+    $first_name
+```
+无需告知变量的数据类型，php会根据值把变量转换为正确的数据类型
+空白符:回车换行可以正常输出
 #### php加入系统环境变量P5
 #### 命令行使用
-* WIN+R,输入cmd
+* WIN+R,输入cmd （输入resmon会打开资源显示器）
 * 输入php,再拖入文件可以直接打开文件
 * Code Runner插件可以直接运行文件
 * 获取用户输入的内容：readline("请输入内容：")
@@ -802,7 +828,7 @@ echo '已跳出全部循环';
     快速插入路径方法：先拖住文件到某个位置，按住shift并松手则绝对路径自动插入
     实践案例p36
 
-### 面向对象
+### 面向对象(オブジェクト指向)
 * 对象  
     程序设计中，对象是由[信息]及对[信息进行处理的描述]所组成的整体。
 
@@ -1245,7 +1271,6 @@ echo '已跳出全部循环';
                 $pets = new Pets();
                 $pets->action('dog','cat',2);
             ```
-
     * 接口和抽象类
         * 接口（interface）：
             * 特点：
@@ -1643,7 +1668,7 @@ $stmt->close();
         返回一个PDOStatement对象，使用该对象的方法（如：fetch(),fetchAll()来获取查询结果；
         通常用于需要获取结果的查询操作。
 
-#### cookie 和 session
+### cookie 和 session
 * cookie
     * 作用
         常用于识别用户；
@@ -1678,7 +1703,34 @@ $stmt->close();
 
     echo $_SESSION['username'];
     ```
+* 两者的关系
+    session和cookie都用于在不同请求之间保持数据的状态；
+    session使用cookie来跟踪和标识用户，通过在cookie中存储session ID来关联服务器端的session数据；
+* 两者的区别
+    存储位置：
+        cookie 客服端浏览器；
+        session 服务器端。
+    容量限制：
+        cookie 容量小，一般几KB;
+        session 容量大，取决于服务器配置。
+    安全性：
+        cookie 篡改或窃取风险，安全性较低；
+        session 存储在服务器端，相对安全。
+    生命周期：
+        cookie 可设置过期时间，关闭浏览器也仍可保持；
+        session 关闭浏览器或一段时间不活动后自动过期。
+    存储方式：
+        cookie 键值对方式，客户端读取与修改；
+        session 数据存储于服务端，客户端只保存一个session ID.
     
+### 实战
+#### 项目简介
+
+
+
+
+
+
 
 
 
