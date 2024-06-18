@@ -1,3 +1,0 @@
-<header id="header">
-    <p>header</p>
-</header>
