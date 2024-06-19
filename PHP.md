@@ -1738,6 +1738,15 @@ layer?
 接口：前端和后端进行交互的一个网址，网址能从后端拿到东西返回给前端
 接口格式
 JSON：数据交换的格式
+alt+shift+选中要更改的符号第一个和最后一个，如$
+ return [
+        $dbms = 'mysql',         //数据库类型
+        $host = 'localhost',     //数据库主机名
+        $dbName = 'example1',    //使用的数据库
+        $user = 'root',          //数据库连接的用户名
+        $password = 'wangzzWZZ',
+    ]
+ctrl+shift+向右的箭头键：光标跑到每个单词的最后面且是选中的状态。
 
 
 
